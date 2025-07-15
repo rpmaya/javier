@@ -1,0 +1,396 @@
+### ========================================
+### VARIABLES JWT TOKENS
+### ========================================
+@baseUrl = http://localhost:3000
+@adminToken = {{login_admin.response.body.token}}
+@userToken = {{login_user.response.body.token}}
+@merchantToken = {{login_merchant.response.body.token}}
+
+### ========================================
+### AUTHENTICATION ROUTES
+### ========================================
+
+### Login Admin
+# @name login_admin
+POST {{baseUrl}}/api/userRoutes/login
+Content-Type: application/json
+
+{
+    "email": "admin1@gmail.com",
+    "Password": "JAVIER2004"
+}
+
+###
+
+### Login User
+# @name login_user
+POST {{baseUrl}}/api/userRoutes/login
+Content-Type: application/json
+
+{
+    "email": "juan@gmail.com",
+    "Password": "password123"
+}
+
+###
+
+### Login Merchant
+# @name login_merchant
+POST {{baseUrl}}/api/userRoutes/login
+Content-Type: application/json
+
+{
+    "email": "comerciante@gmail.com",
+    "Password": "password1234"
+}
+
+###
+
+### ========================================
+### USER ROUTES
+### ========================================
+
+### Crear usuario normal
+POST {{baseUrl}}/api/userRoutes/users
+Content-Type: application/json
+
+{
+    "Nombre": "Juan",
+    "email": "juan@gmail.com",
+    "Password": "password123",
+    "Edad": 33,
+    "Ciudad": "Madrid",
+    "Intereses": ["Deportes"],
+    "PermiteRecibirOfertas": true,
+    "Role": "user"
+}
+
+###
+
+### Crear usuario admin
+POST {{baseUrl}}/api/userRoutes/users
+Content-Type: application/json
+
+{
+    "Nombre": "Administrador",
+    "email": "admin1@gmail.com",
+    "Password": "JAVIER2004",
+    "Edad": 30,
+    "Ciudad": "Madrid",
+    "Intereses": ["Administración", "Tecnología"],
+    "PermiteRecibirOfertas": false,
+    "Role": "admin"
+}
+
+###
+
+### Crear usuario merchant
+POST {{baseUrl}}/api/userRoutes/users
+Content-Type: application/json
+
+{
+    "Nombre": "Comerciante",
+    "email": "comerciante@gmail.com",
+    "Password": "password1234",
+    "Edad": 35,
+    "Ciudad": "Barcelona",
+    "Intereses": ["Comercio", "Ventas"],
+    "PermiteRecibirOfertas": true,
+    "Role": "merchant"
+}
+
+###
+
+### Obtener todos los usuarios
+GET {{baseUrl}}/api/userRoutes/users
+
+###
+
+### Obtener usuario por ID
+GET {{baseUrl}}/api/userRoutes/users/67bef77cdb316109ac83f741
+
+###
+
+### Actualizar usuario
+PUT {{baseUrl}}/api/userRoutes/users/67bef77cdb316109ac83f741
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+    "Nombre": "Juan Actualizado",
+    "Edad": 34,
+    "Ciudad": "Barcelona",
+    "Intereses": ["Deportes", "Tecnología"],
+    "PermiteRecibirOfertas": false
+}
+
+###
+
+### Eliminar usuario
+DELETE {{baseUrl}}/api/userRoutes/users/67bef77cdb316109ac83f741
+
+###
+
+### Obtener usuarios por ofertas y ciudad
+GET {{baseUrl}}/api/userRoutes/users/offers/Madrid
+
+###
+
+### Verificar rol admin
+GET {{baseUrl}}/api/userRoutes/checkAdmin
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Verificar rol merchant
+GET {{baseUrl}}/api/userRoutes/checkMerchant
+Authorization: Bearer {{merchantToken}}
+
+###
+
+### ========================================
+### COMMERCE ROUTES
+### ========================================
+
+### Crear comercio (solo admin)
+POST {{baseUrl}}/api/comerce
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "Nombre_del_comercio": "SportCenter Elite",
+    "CIF": 384234999,
+    "Direccion": "Calle Mayor 123, León",
+    "email": "sportcenter@elite.com",
+    "Telefono_de_contacto": 987654321
+}
+
+###
+
+### Obtener todos los comercios
+GET {{baseUrl}}/api/comerce
+
+###
+
+### Obtener comercio por ID
+GET {{baseUrl}}/api/comerce/670e8f7edc962dccacefe7a6
+
+###
+
+### Actualizar comercio (solo admin)
+PUT {{baseUrl}}/api/comerce/670e8f7edc962dccacefe7a6
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "Nombre_del_comercio": "SportCenter Elite Updated",
+    "CIF": 384234999,
+    "Direccion": "Calle Mayor 456, León",
+    "email": "sportcenter.new@elite.com",
+    "Telefono_de_contacto": 987654322
+}
+
+###
+
+### Eliminar comercio (solo admin)
+DELETE {{baseUrl}}/api/comerce/670ea1b76fd5326329866518
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Obtener comercio por CIF
+GET {{baseUrl}}/api/comerce/cif/384234999
+
+###
+
+### Actualizar comercio por CIF
+PUT {{baseUrl}}/api/comerce/cif/384234999
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "Nombre_del_comercio": "SportCenter Elite CIF Updated",
+    "Direccion": "Nueva Dirección CIF",
+    "email": "nuevo@cif.com",
+    "Telefono_de_contacto": 111222333
+}
+
+###
+
+### Eliminar comercio por CIF
+DELETE {{baseUrl}}/api/comerce/cif/384234999
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Obtener todos los comercios (ruta alternativa)
+GET {{baseUrl}}/api/comerce/all
+
+###
+
+### Obtener comercios ordenados por CIF
+GET {{baseUrl}}/api/comerce/ciforder
+
+###
+
+### Eliminar comercio por ID (solo admin)
+DELETE {{baseUrl}}/api/comerce/delete/670ea2096fd532632986651c
+Authorization: Bearer {{adminToken}}
+
+###
+
+### ========================================
+### COMMERCE DETAILS ROUTES
+### ========================================
+
+### Crear página web de comercio (admin/merchant)
+POST {{baseUrl}}/api/comerceDetailsRoutes
+Authorization: Bearer {{merchantToken}}
+Content-Type: application/json
+
+{
+    "Ciudad": "Oviedo",
+    "Actividad": "Museo",
+    "Título": "Museo de Fernando Alonso",
+    "Resumen": "Museo del mejor piloto de la historia",
+    "textos": ["Texto descriptivo 1", "Texto descriptivo 2"],
+    "imágenes": ["imagen1.jpg", "imagen2.jpg"],
+    "reseñasUsuarios": {
+        "scoring": 0,
+        "numeroPuntuacionesTotales": 0,
+        "reseñas": []
+    },
+    "id_comercio": "67bf616595022a13030833da",
+    "id_merchant": "67bef77cdb316109ac83f741",
+    "isArchived": false
+}
+
+###
+
+### Obtener todas las páginas web
+GET {{baseUrl}}/api/comerceDetailsRoutes
+
+###
+
+### Obtener página web por ID
+GET {{baseUrl}}/api/comerceDetailsRoutes/6717dba5255a273b8c0b0dbe
+
+###
+
+### Actualizar página web (admin/merchant/user para reseñas)
+PUT {{baseUrl}}/api/comerceDetailsRoutes/67ab1c53d7acfab6ed72bc8e
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+    "reseñasUsuarios": {
+        "scoring": 4.5,
+        "numeroPuntuacionesTotales": 3,
+        "reseñas": ["Excelente servicio", "Muy recomendable", "Gran experiencia"]
+    }
+}
+
+###
+
+### Actualizar contenido de página web (solo admin/merchant)
+PUT {{baseUrl}}/api/comerceDetailsRoutes/6717dba5255a273b8c0b0dbe
+Authorization: Bearer {{merchantToken}}
+Content-Type: application/json
+
+{
+    "Ciudad": "Oviedo",
+    "Actividad": "Museo",
+    "Título": "Museo de Fernando Alonso - Actualizado",
+    "Resumen": "El mejor museo del mejor piloto de la historia",
+    "textos": ["Texto actualizado 1", "Texto actualizado 2"],
+    "imágenes": ["nueva_imagen1.jpg"]
+}
+
+###
+
+### Archivar página web
+PATCH {{baseUrl}}/api/comerceDetailsRoutes/6717dba5255a273b8c0b0dbe/archive
+Authorization: Bearer {{merchantToken}}
+
+###
+
+### Eliminar página web (solo admin)
+DELETE {{baseUrl}}/api/comerceDetailsRoutes/delete/67bf616595022a13030833da
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Obtener páginas web por actividad
+GET {{baseUrl}}/api/comerceDetailsRoutes/activity/Museo
+
+###
+
+### Obtener páginas web por merchant
+GET {{baseUrl}}/api/comerceDetailsRoutes/merchant/67bef77cdb316109ac83f741
+
+###
+
+### Obtener páginas web ordenadas por scoring (ascendente)
+GET {{baseUrl}}/api/comerceDetailsRoutes/sort/scoring/asc
+
+###
+
+### Obtener páginas web ordenadas por scoring (descendente)
+GET {{baseUrl}}/api/comerceDetailsRoutes/sort/scoring/desc
+
+###
+
+### ========================================
+### TESTING RESEÑAS - EJEMPLO COMPLETO
+### ========================================
+
+### 1. Login como usuario para obtener token
+# @name user_login_review
+POST {{baseUrl}}/api/userRoutes/login
+Content-Type: application/json
+
+{
+    "email": "juan@gmail.com",
+    "Password": "password123"
+}
+
+###
+
+### 2. Añadir reseña como usuario
+PUT {{baseUrl}}/api/comerceDetailsRoutes/67ab1c53d7acfab6ed72bc8e
+Authorization: Bearer {{user_login_review.response.body.token}}
+Content-Type: application/json
+
+{
+    "reseñasUsuarios": {
+        "scoring": 5,
+        "numeroPuntuacionesTotales": 1,
+        "reseñas": ["¡Increíble experiencia! Totalmente recomendado."]
+    }
+}
+
+###
+
+### 3. Verificar que la reseña se añadió correctamente
+GET {{baseUrl}}/api/comerceDetailsRoutes/67ab1c53d7acfab6ed72bc8e
+
+###
+
+### ========================================
+### API DOCUMENTATION ROUTES
+### ========================================
+
+### Acceder a la documentación Swagger
+GET {{baseUrl}}/api-docs/
+
+###
+
+### Obtener especificación Swagger JSON
+GET {{baseUrl}}/api-docs.json
+
+###
+
+### Obtener información general de la API
+GET {{baseUrl}}/
+
+###
